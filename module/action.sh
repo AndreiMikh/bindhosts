@@ -16,7 +16,7 @@ bindhosts_sh() {
 	# call bindhosts.sh
 	sh $MODDIR/bindhosts.sh --action
 	# print exec time
-	echo "[+] execution time: $(( $(date +%s) - start_time ))s"
+	echo "[+] Execution Time: $(( $(date +%s) - start_time ))s"
 	# 2s sleep on APatch on KernelSU
 	if [ -z "$MMRL" ] && [ -z "$KSU_NEXT" ] && { [ "$KSU" = "true" ] || [ "$APATCH" = "true" ]; }; then
 		sleep 2
