@@ -6,6 +6,7 @@
  - Magic Mount - Mounting Method Primarily Used by Magisk..
  - SUSFS - Advanced Root-Hiding Framework Provided as a Kernel Patch Set..
 
+---
 
 ## Mode 0
 ### DEFAULT MODE
@@ -22,6 +23,7 @@
    - No AdAway Compatibility..
    - Hiding: Umount Modules (For Non-GKI, Backport Path Umount)..
 
+---
 
 ## Mode 1
 ### KSU SUSFS BIND
@@ -31,6 +33,7 @@
 - AdAway Compatible..
 - Hiding: SUSFS Handles the Umount..
 
+---
 
 ## Mode 2
 ### PLAIN BINDHOSTS
@@ -43,6 +46,7 @@
 - AdAway Compatible..
 - Hiding: Requires Assisted Hiding..
 
+---
 
 ## Mode 3
 ### APATCH HFR, HOSTS FILE REDIRECT
@@ -52,6 +56,7 @@
 - No AdAway Compatibility..
 - Hiding: Good Method if it Works. 
 
+---
 
 ## Mode 4
 ### ZYGISK HOSTS REDIRECT
@@ -61,6 +66,7 @@
 - No AdAway Compatibility..
 - Hiding: Good Method as There's No Mount at All, But it Depends on Other Modules..
 
+---
 
 ## Mode 5
 ### KSU SUSFS OPEN REDIRECT
@@ -73,6 +79,7 @@
 - AdAway Compatible..
 - Hiding: Good Method but will Likely Waste More CPU Cycles..
 
+---
 
 ## Mode 6
 ### KSU SOURCE MOD
@@ -82,6 +89,7 @@
 - AdAway Compatible..
 - Hiding: Good Method but you can Probably just Implement SUSFS..
 
+---
 
 ## Mode 7
 ### GENERIC OVERLAYFS
@@ -93,6 +101,7 @@
 - AdAway Compatible..
 - Hiding: Essentially No Hiding, Needs Assistance..
 
+---
 
 ## Mode 8
 ### KSU SUSFS OVERLAYFS
@@ -103,6 +112,7 @@
 - AdAway Compatible..
 - Hiding: Good Method but KSU SUSFS Bind is Easier..
 
+---
 
 ## Mode 9
 ### KSU SUSFS BIND KSTRAT
@@ -113,6 +123,7 @@
 - AdAway Compatible..
 - Hiding: SUSFS Handles the Umount..
 
+---
 
 ## Mode 10
 ### KSUD KERNEL UMOUNT
