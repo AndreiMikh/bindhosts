@@ -19,6 +19,6 @@ esac
 
 sh "$MODDIR/service.sh" > /dev/null 2>&1
 
-echo "bindhosts: hot-install.sh done" >> /dev/kmsg
+echo "♻️ BindHosts: Hot-Install Done" >> /dev/kmsg
 
 # EOF
