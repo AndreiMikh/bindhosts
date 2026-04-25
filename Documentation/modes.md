@@ -1,143 +1,123 @@
-# bindhosts operating modes
-- These are currently defined operating modes that are either probed at auto or available as opt-in
-- You can change operating mode by accessing to [developer option](https://github.com/bindhosts/bindhosts/issues/10#issue-2703531116).
+# BINDHOSTS OPERATING MODES
+- These are Currently Defined Operating Modes that are Either Probed at Auto or Available as Opt-in..
+- You can Change Operating Mode by Accessing to Developer Option..
 
-#### Glossary of terms
- - magic mount - mounting method primarily used by magisk
- - susfs - shorthand for [susfs4ksu](https://gitlab.com/simonpunk/susfs4ksu), advanced root-hiding framework provided as a kernel patchset
+#### GLOSSARY OF TERMS
+ - Magic Mount - Mounting Method Primarily Used by Magisk..
+ - SUSFS - Advanced Root-Hiding Framework Provided as a Kernel Patch Set..
 
----
 
-## mode=0
-### default mode
+## Mode 0
+### DEFAULT MODE
  - **APatch** 
-   - bind mount (magic mount)
-   - Adaway compatible
-   - Hiding: Exclude Modifications + [ZygiskNext](https://github.com/Dr-TSNG/ZygiskNext)'s umount only
+   - Bind Mount (Magic Mount)..
+   - AdAway Compatible..
+   - Hiding: Exclude Modifications + ZygiskNext Umount Only..
  - **Magisk** 
-   - magic mount  
-   - Adaway compatible  
-   - Hiding: Denylist / [Shamiko](https://github.com/LSPosed/LSPosed.github.io/releases) / [Zygisk Assistant](https://github.com/snake-4/Zygisk-Assistant)  
+   - Magic Mount..
+   - AdAway Compatible..
+   - Hiding: Denylist / Shamiko..
  - **KernelSU** 
-   - OverlayFS + path_umount, (magic mount? soon?)
-   - No Adaway compatibility  
-   - Hiding: umount modules (for non-GKI, please backport path_umount)
+   - OverlayFS + Path Umount, (Magic Mount)..
+   - No AdAway Compatibility..
+   - Hiding: Umount Modules (For Non-GKI, Backport Path Umount)..
 
----
 
-## mode=1
-### ksu_susfs_bind
-- susfs assisted mount --bind
-- KernelSU only  
-- Requires susfs-patched kernel and userspace tool  
-- Adaway compatible  
-- Hiding: SuSFS handles the unmount
+## Mode 1
+### KSU SUSFS BIND
+- SUSFS Assisted Mount Bind..
+- KernelSU Only..
+- Requires SUSFS Patched Kernel and Userspace Tool..
+- AdAway Compatible..
+- Hiding: SUSFS Handles the Umount..
 
----
 
-## mode=2
-### plain bindhosts
-- mount --bind
-- **Highest compatibility**
-- Actually works on all managers.
-- will leak a bind mount and a globally modified hosts file if unassisted.
-- selected when APatch is on OverlayFS (default mode) as it offers better compatibility.
-- selected when a known "denylist handler" is found.
-- Adaway compatible
-- Hiding: requires assisted hiding
+## Mode 2
+### PLAIN BINDHOSTS
+- Mount Bind
+- **Highest Compatibility**
+- Actually Works on All Managers..
+- Will Leak a Bind Mount and a Globally Modified Hosts File if Unassisted..
+- Selected when APatch is on OverlayFS (Default Mode) as it Offers better Compatibility..
+- Selected when a Known "Denylist Handler" is Found..
+- AdAway Compatible..
+- Hiding: Requires Assisted Hiding..
 
----
 
-## mode=3
-### apatch_hfr, hosts_file_redirect
-- in-kernel redirection of /system/etc/hosts for uid 0
-- APatch only, requires hosts_file_redirect KPM  
-  - [hosts_file_redirect](https://github.com/AndroidPatch/kpm/blob/main/src/hosts_file_redirect/)  
-  - [How-to-Guide](https://github.com/bindhosts/bindhosts/issues/3)
-- Does NOT work on all setups, hit-and-miss  
-- No Adaway compatibility  
-- Hiding: good method if it WORKS
+## Mode 3
+### APATCH HFR, HOSTS FILE REDIRECT
+- In-Kernel Redirection of /SYSTEM/ETC /HOSTS for UID 0
+- APatch Only, Requires Hosts File Redirect KPM..
+- Does Not Work on All Setups, Hit-and-Miss..
+- No AdAway Compatibility..
+- Hiding: Good Method if it Works. 
 
----
 
-## mode=4
-### zn_hostsredirect
-- zygisk netd injection
-- usage is **encouraged** by the author (aviraxp)
-> *"Injection is much better than mount in this usecase"* <div align="right"><em>-- aviraxp</em></div>
-- should work on all managers  
-- Requires:  
-  - [ZN-hostsredirect](https://github.com/aviraxp/ZN-hostsredirect)  
-  - [ZygiskNext](https://github.com/Dr-TSNG/ZygiskNext)  
-- No Adaway compatibility  
-- Hiding: good method as there's no mount at all, but it depends on other modules
+## Mode 4
+### ZYGISK HOSTS REDIRECT
+- Zygisk Netd Injection .
+- Usage is **Encouraged**..
+- Injection is Much Better Than Mount in this Usecase..
+- No AdAway Compatibility..
+- Hiding: Good Method as There's No Mount at All, But it Depends on Other Modules..
 
----
 
-## mode=5
-### ksu_susfs_open_redirect
-- in-kernel file redirects for uid below 2000
-- KernelSU only 
-- **OPT-IN** only 
-- Requires susfs-patched kernel and userspace tool  
-- usage is **discouraged** by author (simonpunk)
-> *"openredirect will take more CPU cycle as well.."* <div align="right"><em>-- simonpunk</em></div>
-- Requires SuSFS 1.5.1 or later  
-- Adaway compatible
-- Hiding: good method but will likely waste more cpu cycles
+## Mode 5
+### KSU SUSFS OPEN REDIRECT
+- In-Kernel File Redirects for UID Below 2000. 
+- KernelSU Lnly..
+- **Opt-in** Only..
+- Requires SUSFS Patches Kernel and Userspace Tool..
+- Usage is **Discouraged**
+- Requires SUSFS v1.5.1 or Later.. 
+- AdAway Compatible..
+- Hiding: Good Method but will Likely Waste More CPU Cycles..
 
----
 
-## mode=6
-### ksu_source_mod
-- KernelSU try_umount assisted mount --bind
-- Requires source modification: [reference](https://github.com/tiann/KernelSU/commit/2b2b0733d7c57324b742c017c302fc2c411fe0eb)  
-- Supported on KernelSU NEXT 12183+ [reference](https://github.com/rifsxd/KernelSU-Next/commit/9f30b48e559fb5ddfd088c933af147714841d673)
-- **WARNING**: Conflicts with SuSFS. You don't need this if you can implement SuSFS.
-- Adaway compatible
-- Hiding: good method but you can probably just implement susfs.
+## Mode 6
+### KSU SOURCE MOD
+- KernelSU Try Umount Assisted Mount Bind..
+- Requires Source Modification..
+- **WARNING**: Conflicts with SUSFS. You Don't Need this if you can Implement SUSFS..
+- AdAway Compatible..
+- Hiding: Good Method but you can Probably just Implement SUSFS..
 
----
 
-## mode=7
-### generic_overlay
-- generic overlayfs rw mount
-- should work on all managers  
-- **OPT-IN** only due to **awfully high** susceptability to detections
-- leaks an overlayfs mount (with /data/adb upperdir), leaks globally modified hosts file
-- will NOT likely work on APatch bind_mount / MKSU if user has native f2fs /data casefolding
-- Adaway compatible
-- Hiding: essentially no hiding, needs assistance
+## Mode 7
+### GENERIC OVERLAYFS
+- Generic OverlayFS RW Mount..
+- Should Work on All Managers..
+- **Opt-in** Only Due to **Awfully High** Susceptability to Detections
+- Leaks an OverlayFS Mount, Leaks Globally Modified Hosts File..
+- Will Not Likely Work on APatch Bind Mount / MKSU if User has Native F2FS / Data Casefolding..
+- AdAway Compatible..
+- Hiding: Essentially No Hiding, Needs Assistance..
 
----
 
-## mode=8
-### ksu_susfs_overlay
-- susfs-assisted overlayfs rw mount
-- KernelSU only  
-- Requires susfs-patched kernel and userspace tool
-- will NOT likely work on APatch bind_mount / MKSU if user has native f2fs /data casefolding
-- Adaway compatible
-- Hiding: good method but ksu_susfs_bind is easier
+## Mode 8
+### KSU SUSFS OVERLAYFS
+- SUSFS Assisted OverlayFS RW Mount..
+- KernelSU Only..  
+- Requires SUSFS Patched Kernel and Userspace Tool..
+- Will Not Likely Work on APatch Bind Mount / MKSU if User has Native F2FS / Data Casefolding..
+- AdAway Compatible..
+- Hiding: Good Method but KSU SUSFS Bind is Easier..
 
----
 
-## mode=9
-### ksu_susfs_bind_kstat
-- susfs assisted mount --bind + kstat spoofing
-- KernelSU only  
-- Requires susfs-patched kernel and userspace tool  
-- **OPT-IN** only due to it being niche
-- Adaway compatible  
-- Hiding: SuSFS handles the unmount
+## Mode 9
+### KSU SUSFS BIND KSTRAT
+- SUSFS assisted Mount Bind + Kstat Spoofing..
+- KernelSU Only..  
+- Requires SUSFS Patched Kernel and Userspace Tool..
+- **Opt-in** Only Due to it Being Niche
+- AdAway Compatible..
+- Hiding: SUSFS Handles the Umount..
 
----
 
-## mode=10
-### ksud_kernel_umount
-- mount --bind + kernel assisted umount
-- KernelSU only  
-- Requires KernelSU 22106+
-- Adaway compatible  
-- Hiding: KernelSU handles the unmount.
+## Mode 10
+### KSUD KERNEL UMOUNT
+- Mount Bind + Kernel Assisted Umount..
+- KernelSU Only..  
+- Requires KernelSU v22106 or Later..
+- AdAway Compatible..
 
