@@ -10,8 +10,8 @@ export MODULE_HOT_RUN_SCRIPT="hotinstall.sh"
 # grab own info (version)
 versionCode=$(grep versionCode "$MODPATH/module.prop" | sed 's/versionCode=//g' )
 
-echo "[+] bindhosts v$versionCode "
-echo "[%] customize.sh "
+echo "📜 BindHosts v$versionCode "
+echo "ℹ️ Customize"
 
 # Function to detect key press (Volume Up or Volume Down) or timeout
 detect_key_press() {
@@ -22,7 +22,7 @@ detect_key_press() {
 
     # Check if input was read or timed out
     if [ $? -eq 142 ]; then  # Timeout exit code
-        echo "[!] No key pressed within $timeout_seconds seconds. Skipping installation..."
+        echo "⚠️ No Key Pressed Within $timeout_seconds Seconds, Skipping Installation..."
         return 1
     fi
 
@@ -30,7 +30,7 @@ detect_key_press() {
     if echo "$line" | grep -q "KEY_VOLUMEUP"; then
         return 0  # Installing Bindhosts-app
     else
-        echo "[+] Skipping installation..."
+        echo "❌ Skipping Installation..."
         return 1
     fi
 }
@@ -38,12 +38,12 @@ detect_key_press() {
 # Installation prompt if bindhosts app is not installed
 pm path me.itejo443.bindhosts > /dev/null 2>&1 || [ -f "$PERSISTENT_DIR/bindhosts_webui" ] || {
     # Install App Section
-    echo "[+] BindHosts-app, Ref:github.com/itejo443/BindHosts-app"
-    echo "[?] Do you want to install BindHosts-app"
-    echo "[?] VOL [+]: YES"
-    echo "[?] VOL [-]: NO"
+    echo "ℹ️ BindHosts-App, Ref:github.com/itejo443/BindHosts-app"
+    echo "❓ Do you Want to Install BindHosts-App"
+    echo "❓ Volume Up   : Yes"
+    echo "❓ Volume Down : No"
     if detect_key_press; then
-        echo "[+] Installing BindHosts-app..."
+        echo "📩 Installing BindHosts-App..."
 	busybox chmod +x "$MODPATH/bindhosts-app.sh"
         sh "$MODPATH/bindhosts-app.sh"
     fi
@@ -62,7 +62,7 @@ busybox chmod +x "$MODPATH/bindhosts-app.sh"
 manager_paths="/data/adb/ap/bin /data/adb/ksu/bin"
 for i in $manager_paths; do
 	if [ -d "$i" ]; then
-		echo "[+] creating symlink in $i"
+		echo "🔑 Creating Symlink in $i"
 		ln -sf /data/adb/modules/bindhosts/bindhosts.sh "$i/bindhosts"
 	fi
 done
@@ -78,17 +78,17 @@ disable_hosts_modules
 bad_module="HideMyRoot"
 for i in $bad_module; do
 	if [ -d "/data/adb/modules/$i" ] ; then
-		echo "[!] 🚨 possible confliciting module found!"
-		echo "[!] ⚠️ $i "
-		echo "[!] 📢 uninstall for a flawless operation"
-		echo "[!] ‼️ you have been warned"
+		echo "🚨 Possible Confliciting Module Found!"
+		echo "⚠️ $i"
+		echo "📢 Uninstall for a Flawless Operation"
+		echo "‼️ You have been Warned"
 		sleep 5
 	fi
 done
 
 # copy our old hosts file
 if [ -f /data/adb/modules/bindhosts/system/etc/hosts ] ; then
-	echo "[+] migrating hosts file "
+	echo "ℹ️ Migrating Hosts File "
 	cat /data/adb/modules/bindhosts/system/etc/hosts > "$MODPATH/system/etc/hosts"
 fi
 
@@ -113,7 +113,7 @@ fi
 # if hosts file empty or just comments
 # just copy real hosts file over
 grep -qv "#" "$MODPATH/system/etc/hosts" > /dev/null 2>&1 || {
-	echo "[+] creating hosts file"
+	echo "☘️ Creating Hosts File"
 	cat /system/etc/hosts > "$MODPATH/system/etc/hosts"
 	printf "127.0.0.1 localhost\n::1 localhost\n" >> "$MODPATH/system/etc/hosts"
 }
