@@ -29,11 +29,11 @@ latest_release_url=$(download "https://api.github.com/repos/$REPO_OWNER/$REPO_NA
 
 # Check if the URL is valid
 if [ -z "$latest_release_url" ]; then
-	echo "Error: Could Not Find a Latest Release URL"
+	echo "⚠️ Error: Could Not Find a Latest Release URL"
 	exit 1
 fi
 
-echo "Latest APK URL: $latest_release_url"
+echo "🔍 Latest APK URL: $latest_release_url"
 
 # Download the APK file using download()
 download "$latest_release_url" > "$APK_PATH" || echo "[x] Failed to download the APK."
@@ -43,16 +43,16 @@ pm install -r "$APK_PATH" 2>&1 </dev/null | cat
 
 # Check if the installation was successful by verifying the app's presence
 if pm path "$APP_PACKAGE" > /dev/null 2>&1 ; then
-	echo "APK Installed Successfully as a User App"
-	echo "[+] BindHosts APK Installed"
-	echo "[+] Enable Superuser with Capabilities"
-	echo "[+] Enable Tile Bindhosts APK Tile & Notification Permission"
+	echo "✔️ APK Installed Successfully as a User App"
+	echo "✔️ BindHosts APK Installed"
+	echo "✔️ Enable Superuser with Capabilities"
+	echo "✔️ Enable Tile Bindhosts APK Tile and Notification Permission"
 else
-	echo "[x] Failed to Install APK"
+	echo "❌ Failed to Install APK"
 	# Save the APK to the failsafe directory if devpts hooks fail
 	mkdir -p /sdcard/Download/bindhosts-app
 	cp -f "$APK_PATH" /sdcard/Download/bindhosts-app/app.apk
-	echo "[*] Please Manually Install App from /SDCARD/Download/BindHosts-App"
+	echo "📃 Please Manually Install App from /SD Card /Download /BindHosts-App"
 fi
 
 # Clean up
