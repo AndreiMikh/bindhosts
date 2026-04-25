@@ -1,7 +1,7 @@
 id=bindhosts
-name=bindhosts
-version=v2.1.2
-versionCode=212
-author=xx, KOWX712
-updateJson=https://raw.githubusercontent.com/bindhosts/bindhosts/master/update.json
-description=Systemless hosts for APatch, KernelSU and Magisk 
+name=BindHosts
+version=v7.0.0
+versionCode=700
+author=Andrei
+updateJson=https://raw.githubusercontent.com/AndreiMikh/bindhosts/master/update.json
+description=☘️ Systemless Hosts Based Ad-Blocker | Andrei
