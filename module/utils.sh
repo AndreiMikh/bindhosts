@@ -15,12 +15,12 @@ disable_hosts_modules() {
 		if [ "$id" != "bindhosts" ] && [ -f "$module/system/etc/hosts" ] && [ ! -f "$module/disable" ]; then
 			# verbose on stdout
 			[ "$disable_hosts_modules_verbose" = 1 ]  && { 
-				echo "[!] Conflicting module found!"
-				echo "[-] Disabling $id"
+				echo "⚠️ Conflicting Module Found!"
+				echo "🔧 Disabling $id"
 			}
 			# verbose on dmesg
 			[ "$disable_hosts_modules_verbose" = 2 ]  && { 
-				echo "bindhosts/utils: disable_hosts_modules: conflicting module named $id found! disabling." >> /dev/kmsg
+				echo "🚀 BindHosts / Utils: Disable Hosts Modules: Conflicting Module Named $id Found! Disabling..." >> /dev/kmsg
 			}
 			touch "$module/disable"
 		fi
