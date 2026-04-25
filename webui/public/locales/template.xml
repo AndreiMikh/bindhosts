@@ -34,7 +34,7 @@
     <string name="control_panel_installing">Installing...</string>
     <string name="control_panel_installed">Installed, Enable Superuser Privilege for BindHosts App</string>
     <string name="control_panel_download_fail">Failed to Download, Check your Internet Connection</string>
-    <string name="control_panel_install_fail">Failed to Install, Manually Install from /SDCard/Download/BindHosts App</string>
+    <string name="control_panel_install_fail">Failed to Install, Manually Install from /SD Card /Download /BindHosts App</string>
     <string name="control_panel_module_update">Module Update</string>
     <string name="control_panel_update_true">Module Update Enabled</string>
     <string name="control_panel_update_false">Module Update Disabled</string>
@@ -50,7 +50,7 @@
     <string name="custom_guide1">Add Custom Redirects</string>
     <string name="custom_example">Example:</string>
     <string name="custom_format">Format:</string>
-    <string name="custom_warning">WARNING: Custom Rules are Loaded on Both Run and Reset</string>
+    <string name="custom_warning">Warning: Custom Rules are Loaded on Both Run and Reset</string>
     <string name="custom_prompt_fail">%s is Already in Custom Rule</string>
     <!-- Import -->
     <string name="import_custom_title">Import Custom Rules</string>
@@ -94,7 +94,7 @@
     <string name="more_support_issue">Report an Issue</string>
     <string name="more_support_update_canary">Update to Latest Canary Version</string>
     <string name="more_support_update_success">Update Successfully, Reboot to Take Effect</string>
-    <string name="more_support_update_fail">Failed to Update, please Download and Install Manually from GitHub</string>
+    <string name="more_support_update_fail">Failed to Update, Download and Install Manually from GitHub</string>
     <string name="more_support_checking_update">Checking for Updates...</string>
     <string name="more_support_no_update">There is Currently No Update Available</string>
     <string name="more_support_update_locales">Update Translation Bundle</string>
