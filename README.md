@@ -1,4 +1,4 @@
-[English](README.md) | [Deutsch](README_de.md) | [Español](README_es-ES.md) | [Français](README_fr.md) | [Bahasa Indonesia](README_id.md) | [Italiano](README_it.md) | [Русский](README_ru.md) | [Türkçe](README_tr.md) | [简体中文](README_zh-CN.md) 
+[English](README.md)
 
 # bindhosts
 
@@ -34,12 +34,12 @@ Fully standalone, self-updating.
 
 ## Links
 
-- Download [here](https://github.com/bindhosts/bindhosts/releases)
+- Download [here](https://github.com/AndreiMikh/bindhosts/releases)
 - Looking for more sources? [here](Documentation/sources.md)
 - Localization [guide](Documentation/localize.md)
 
 ## Help and Support
 
-Report [here](https://github.com/bindhosts/bindhosts/issues) if you encounter any issues.
+Report [here](https://github.com/AndreiMikh/bindhosts/issues) if you encounter any issues.
 
-[Pull requests](https://github.com/bindhosts/bindhosts/pulls) are always welcome.
+[Pull requests](https://github.com/AndreiMikh/bindhosts/pulls) are always welcome.
