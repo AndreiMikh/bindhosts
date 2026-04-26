@@ -1,26 +1,26 @@
-mode=0
-     default mode
-	Apatch
-	   This Manager can now operate in either OverlayFS or bind-mount (magic mount)
-	   hiding:
-	      overlayfs mode is nope 
-	      magic mount (bind_mount_enable) mode is hideable with zygisk assistant
-	Magisk, magic mount
-	   Adaway compatible
-	   hiding: shamiko / denylist
-	KernelSU, OverlayFS + path_umount
-	   no adaway compatibiliy
-	   hiding: umount modules, for non-gki please backport path_umount 
+Mode=0
+     Default Mode
+	APatch
+	   Manager can Operate in Either OverlayFS or Bind Mount (Magic Mount)
+	   Hiding:
+	      OverlayFS mode is Nope 
+	      Magic Mount (Bind Mount Enable) Mode is Hideable with Zygisk Assistant
+	Magisk, Magic Mount
+	   AdAway Compatible
+	   Hiding: Shamiko / Denylist
+	KernelSU, OverlayFS + Path Unmount
+	   No AdAway Compatibility
+	   Huding: Unmount Modules, for Non-GKI Backport Path Unmount 
 
-mode=1
-     ksu_susfs bind mode, mount --bind
-        KernelSU only
-        Requires susfs-patched kernel and userspace tool
-     Adaway compatible
-     hiding, best in its class as susfs handles the unmount
+Mode=1
+     KSU SUSFS Bind Mode, Mount Bind
+        KernelSU Only
+        Requires SUSFS Patched Kernel and Userspace Tool
+     AdAway Compatible
+     Hiding, Best in its Class as SUSFS handles Unmount
      
-mode=2
-    plain bindhosts, mount --bind
+Mode=2
+    Plain BindHosts, Mount Bind
        actually works on all managers but not really preferrable as it leaks a global mount
     Adaway compatible
     This is selected when APatch is on OverlayFS mdoe as that offers better compatibility
