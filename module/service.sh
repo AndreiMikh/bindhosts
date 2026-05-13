@@ -144,6 +144,9 @@ fi
 
 ##################
 
+apply_description() {
+sleep 3		
+
 # set description conditionally
 if [ -w $target_hostsfile ] ; then
 
@@ -166,19 +169,18 @@ else
 	touch $MODDIR/disable
 fi
 
-until [ "$(getprop sys.boot_completed)" = "1" ]; do
-	sleep 1
-done
+cat "$MODDIR/module.prop" > "$MODDIR/module.prop.tmp"
+busybox sed -i "s/^description=.*/$string/g" "$MODDIR/module.prop.tmp"
+busybox mv -f "$MODDIR/module.prop.tmp" "$MODDIR/module.prop"
+} # apply_description
 
-# update description
-TEMP_PROP="/dev/bindhosts_module.prop"
-cat "$MODDIR/module.prop" > "$TEMP_PROP"
-busybox sed -i "s/^description=.*/$string/g" "$TEMP_PROP"
-grep -q "^description=" "$TEMP_PROP" && cat "$TEMP_PROP" > "$MODDIR/module.prop"
-[ -f "$TEMP_PROP" ] && rm -f "$TEMP_PROP"
+apply_description & #fork in background
 
-# remove previous linked hosts file and link again
-# hosts location might be different after reboot when user flash znhr/hfr
-sh $MODDIR/bindhosts.sh --setup-link
+if [ ! "$APATCH" = true ] && [ ! "$KSU" = true ]; then
+	until [ "$(getprop sys.boot_completed)" = "1" ]; do
+		sleep 1
+	done
+	sh "$MODDIR/boot-completed.sh" &
+fi
 
 # EOF
