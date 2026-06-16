@@ -100,7 +100,7 @@ _month_txt2dec() {
 		OCT) echo 10 ;;
 		NOV) echo 11 ;;
 		DEC) echo 12 ;;
-		*) echo "$txt2dec_month" ;; # Return unconverted if parameter is not JAN-DEC
+		*) echo "$txt2dec_month" ;; # Return Unconverted if Parameter is Not JAN-DEC
 	esac
 }
 
@@ -114,7 +114,7 @@ _day_txt2dec() {
 		THU) echo 4 ;;
 		FRI) echo 5 ;;
 		SAT) echo 6 ;;
-		*) echo "$txt2dec_day" ;; # Return unconverted if parameter is not SUN-SAT
+		*) echo "$txt2dec_day" ;; # Return Unconverted if Parameter is not SUN-SAT
 	esac
 }
 
@@ -179,34 +179,34 @@ _is_valid_cron_arg() { # return value: 0 = true, 1 = false
 		substring=""
 		prev_substring=0
 		while [ "$valid_cron_arg" != "$substring" ] ;do
-			# Extract the substring from start of arg up to delimiter
-			# Example: substring="JAN" from "JAN,MAR,JUN,SEP,DEC"
+			# Extract the Substring from Start of Arg up to Delimiter
+			# Example: Substring="JAN" from "JAN,MAR,JUN,SEP,DEC"
 			substring=${valid_cron_arg%%"$delimiter"*}
 			# Delete this first "substring" AND its delimiter, from arg
-			# Example: arg="MAR,JUN,SEP,DEC" from "JAN,MAR,JUN,SEP,DEC"
+			# Example: Arg="MAR,JUN,SEP,DEC" from "JAN,MAR,JUN,SEP,DEC"
 			valid_cron_arg="${valid_cron_arg#"$substring""$delimiter"}"
 
 			is_arg_valid=false
-			# Diving in from full arg (e.g. "0-59/5") into
-			# individual value (e.g. "0", "59" "/2") for validation
+			# Diving in from Full Arg (e.g. "0-59/5") into
+			# individual Value (e.g. "0", "59" "/2") for Validation
 			_is_valid_cron_arg "$x" "$substring" && is_arg_valid=true
 
 			if [ "$delimiter" = "/" ] || [ "$delimiter" = "-" ]; then
-				[ "${#valid_cron_arg}" -lt 1 ] && return 1 # End check if no arg is behind / or -
+				[ "${#valid_cron_arg}" -lt 1 ] && Return 1 # End Check if No Arg is behind / or -
 
-				# Test if arg behind / or - is JAN-DEC / SUN-SAT
-				# arg will be converted to its respective number
+				# Test if Arg Behind / or - is JAN-DEC / SUN-SAT
+				# Arg will be Converted to its Respective Number
 				converted_arg="$valid_cron_arg"
 				[ "$x" -eq 4 ] && converted_arg=$(_month_txt2dec "$valid_cron_arg")
 				[ "$x" -eq 5 ] && converted_arg=$(_day_txt2dec "$valid_cron_arg")
-				# End check if the arg behind / or - is not a number or not in the JAN-DEC, SUN-SAT lists
+				# End Check if the Arg behind / or - is Not a Number or Not in the JAN-DEC, SUN-SAT Lists
 				[ "$(echo "$converted_arg" | tr -d "[:digit:]" | wc -w)" -gt 0 ] && return 1
 
 				if [ "$delimiter" = "/" ]; then
-					# Arg behind / must be a number larger than 0 or
-					# if arg is of the MONTH or DAY_OF_WEEK fields, must be in JAN-DEC, SUN-SAT lists
+					# Arg Behind / Must be a Number Larger Than 0 or
+					# if Arg is of the Month or Day of Week Fields, Must be in JAN-DEC, SUN-SAT Lists
 					is_arg_valid=true
-					# End check if arg behind / is less than 1
+					# End Check if Arg Behind / is Less Than 1
 					[ "$converted_arg" -lt 1 ] && return 1
 				elif [ "$delimiter" = "-" ]; then
 					converted_substring="$substring"
@@ -234,11 +234,11 @@ custom_cron() {
 	shift
 	echo "📃 Validating Custom Cron Expression"
 	custom_cron_error=false
-	# Has only 1 arg and it starts with @
+	# Has only 1 Arg and it Starts with @
 	if [ "$(echo "$1" | wc -w)" -eq 1 ] && (echo "$1" | grep -q "^@"); then
-		# End check if arg is not these accepted @strings (case-sensitive)
+		# End Check if Arg is Not these Accepted @strings (Case-Sensitive)
 		(! echo "$1" | grep -Eqw "^(@reboot|@hourly|@midnight|@daily|@weekly|@monthly|@annually|@yearly)$") && custom_cron_error=true
-	# Has 5 args
+	# Has 5 Args
 	elif [ "$(echo "$1" | wc -w)" -eq 5 ]; then
 		x=1
 		while [ $x -lt 6 ] ; do
@@ -271,7 +271,7 @@ custom_cron() {
 	# add entry
 	echo "$1 sh $MODDIR/bindhosts.sh --force-update > $PERSISTENT_DIR/bindhosts_cron.log 2>&1 &" | busybox crontab -c $PERSISTENT_DIR/crontabs -
 	echo "☘️ $(head -n1 $PERSISTENT_DIR/crontabs/root) " 
-	echo "❌ Make Sure Entry is Correct!"
+	echo "⚠️ Make Sure Entry is Correct!"
 	echo "✔️ Crontab Entry Added!"
 }
 
@@ -285,40 +285,40 @@ enable_cron() {
 }
 
 disable_cron() {
-	# kill busybox crond that we enabled
+	# kill Busybox Crond that we Enabled
 	for i in $(busybox pidof busybox); do 
-		# super leet gamma knife
+		# Super Leet Gamma Knife
 		grep -q "bindhosts" "/proc/$i/cmdline" > /dev/null 2>&1 && {
-		echo "❌ Killing Pid $i"
+		echo "⚠️ Killing Pid $i"
 		busybox kill -9 "$i"
 		}
 	done
-	# clean entry
+	# Clean Entry
 	if grep -q "bindhosts.sh" $PERSISTENT_DIR/crontabs/root > /dev/null 2>&1; then
 		rm -rf $PERSISTENT_DIR/crontabs
-		echo "❌ Crontab Entry Removed!"
+		echo "⚠️ Crontab Entry Removed!"
 	else
-		echo "❌ No Coontab Entry Found!"
+		echo "⚠️ No Coontab Entry Found!"
 	fi
 }
 
 toggle_updatejson() {
 	if grep -q "^updateJson" $MODDIR/module.prop ; then
 		sed -i 's/updateJson/xpdateJson/g' $MODDIR/module.prop 
-		echo "❌ Module Updates Disabled!" 
+		echo "⚠️ Module Updates Disabled!" 
 	else
 		sed -i 's/xpdateJson/updateJson/g' $MODDIR/module.prop 
 		echo "✔️ Module Updates Enabled!" 
 	fi
 }
 
-# probe for downloaders
-# wget = low pref, no ssl.
-# curl, has ssl on android, we use it if found
-# here we chant the https meme.
-# https doesn't hide the fact that i'm using https so that's why i don't use encryption 
-# because everyone is trying to crack encryption so i just don't use encryption because 
-# no one is looking at unencrypted data because everyone wants encrypted data to crack
+# Probe for Downloaders
+# Wget = Low Pref, No SSL
+# Curl, has SSL on Android, we Use it if Found
+# Here we Chant the HTTPS Meme
+# HTTPS doesn't Hide the Fact that i'm Using HTTPS so that's Why i don't Use Encryption 
+# Because Everyone is Trying to Crack Encryption so i just don't Use Encryption because 
+# No One is Looking at Unencrypted Data because Everyone wants Encrypted Data to Crack
 if curl --version > /dev/null 2>&1; then
 	if curl --help all | grep -q "parallel" >/dev/null 2>&1; then
 		download() { curl --connect-timeout 10 -Z -Ls "$1"; }
@@ -331,16 +331,16 @@ fi
 
 adblock() {
 	illusion
-	# source processing start!
+	# Source Processing Start
 	echo "📃 Processing Sources"
 	sources=$(sed 's/#.*//' $PERSISTENT_DIR/sources.txt | grep -v "^disabled" | grep http)
 	if [ -z "$sources" ]; then
-		echo "❌ No Sources Found"
-		echo "❌ Sources Needs Correction"
+		echo "⚠️ No Sources Found"
+		echo "⚠️ Sources Needs Correction"
 		return
 	fi
 
-	# download routine start!
+	# Download Routine Start
 	successful_downloads=0
 	total_downloads=0
 	for url in $sources ; do
@@ -354,7 +354,7 @@ adblock() {
 		fi
 	done
 
-	# if all downloads failed we are probably offline, abort the update.
+	# If All Downloads Failed we are Probably Offline, Abort the Update
 	if [ "$successful_downloads" -eq 0 ] && [ "$total_downloads" -gt 0 ]; then
 		echo "⚠️ All Downloads Failed, Aborting Update..."
 		echo "⚠️ Keeping Existing Hosts File..."
@@ -362,20 +362,20 @@ adblock() {
 		return
 	fi
 
-	# if temphosts is empty (can happen if sources were valid but returned no content)
+	# if Temphosts is Empty (Can Happen if Sources were Valid but Returned No Content)
 	[ ! -s "$rwdir/temphosts" ] && {
 		echo "⚠️ Downloaded Hosts Content is Empty"
 		echo "⚠️ Using Old Hosts File!"
 		# strip first two lines since thats just localhost
 		tail -n +3 $target_hostsfile > "$rwdir/temphosts"
 		}
-	# localhost
+	# Local Host
 	printf "127.0.0.1 localhost\n::1 localhost\n" > $target_hostsfile
-	# always restore user's custom rules
+	# Always Restore User's Custom Rules
 	sed 's/#.*//; /^$/d; s/^disabled|//g' $PERSISTENT_DIR/custom*.txt >> $target_hostsfile
-	# blacklist.txt
+	# Blacklist.txt
 	for i in $(sed 's/#.*//' $PERSISTENT_DIR/blacklist.txt ); do echo "0.0.0.0 $i" >> "$rwdir/temphosts"; done
-	# whitelist.txt
+	# Whitelist.txt
 	echo "🔧 Processing Whitelist"
 	# make sure tempwhitelist isnt empty
 	# or it will grep out nothingness from everything
@@ -415,11 +415,11 @@ reset() {
 
 run() {
 	adblock
-	# store these as variables
-	# this way we dont do the grepping twice
+	# Store these as Variables
+	# This Way We Dont do the Grepping Twice
 	custom=$( grep -vEc "0.0.0.0| localhost|#" $target_hostsfile)
 	blocked=$(grep -c "0.0.0.0" $target_hostsfile )
-	# now use them
+	# Now Use Them
 	echo "[+] blocked: $blocked | custom: $custom "
 	string="description=Status: ☘️ Active | 🚫 Blocked: $blocked | 📜 Custom Ad-Blocker: $custom $helper_mode | Systemless Hosts Based Ad-Blocker"
 	sed -i "s/^description=.*/$string/g" $MODDIR/module.prop
@@ -461,8 +461,8 @@ quick_reset_restore () {
 		custom=$( grep -vEc "0.0.0.0| localhost|#" $target_hostsfile)
 		blocked=$(grep -c "0.0.0.0" $target_hostsfile )
 		# now use them
-		echo "⛔ Blocked: $blocked | 👾 Custom Ad-Blocker: $custom "
-		string="description=Status: ☘️ Active | 🚫 Blocked: $blocked | 👾 Custom Ad-Blocker: $custom $helper_mode"
+		echo "⛔ Blocked: $blocked | 📜 Custom Ad-Blocker: $custom "
+		string="description=Status: ☘️ Active | 🚫 Blocked: $blocked | 📜 Custom Ad-Blocker: $custom $helper_mode"
 	else
 		echo "📥 Backing up Hosts File!"
 		cat $target_hostsfile > $PERSISTENT_DIR/bindhosts_backup
