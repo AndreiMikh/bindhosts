@@ -7,7 +7,7 @@ PERSISTENT_DIR="/data/adb/bindhosts"
 SUSFS_BIN=/data/adb/ksu/bin/ksu_susfs
 
 target_hostsfile="$MODDIR/system/etc/hosts"
-helper_mode=""
+=""
 
 # reusable functions
 mount_bind() { 
@@ -25,18 +25,18 @@ overlay_routine() {
 
 # operating modes
 normal_mount() {
-	echo "bindhosts: service.sh - mode normal_mount" >> /dev/kmsg
+	echo "Bindhosts: Service Script - Mode Normal Mount" >> /dev/kmsg
 }
 
 ksu_susfs_bind() { 
 	mount_bind
 	${SUSFS_BIN} add_try_umount '/system/etc/hosts' 1
-	echo "bindhosts: service.sh - mode ksu_susfs_bind" >> /dev/kmsg
+	echo "Bindhosts: Service Script - Mode KSU SuSFS Bind" >> /dev/kmsg
 }
 
 bindhosts() { 
 	mount_bind
-	echo "bindhosts: service.sh - mode plain bindhosts" >> /dev/kmsg 
+	echo "Bindhosts: Service Script - Mode Plain Bindhosts" >> /dev/kmsg 
 }
 
 kernel_hostsredirect() {
@@ -46,8 +46,8 @@ kernel_hostsredirect() {
 		printf "127.0.0.1 localhost\n::1 localhost\n" >> $target_hostsfile
 		hosts_set_perm "$target_hostsfile"
 		}
-	helper_mode="| hosts_file_redirect 💉"
-	echo "bindhosts: service.sh - mode kernel_hostsredirect" >> /dev/kmsg
+	helper_mode="| Hosts-File-Redirect"
+	echo "Bindhosts: Service Script - Mode Kernel Hosts Redirect" >> /dev/kmsg
 }
 
 zn_hostsredirect() {
@@ -58,25 +58,25 @@ zn_hostsredirect() {
 		printf "127.0.0.1 localhost\n::1 localhost\n" >> $target_hostsfile
 		hosts_set_perm "$target_hostsfile"
 		}
-	helper_mode="| ZN-hostsredirect 💉"
-	echo "bindhosts: service.sh - mode zn_hostsredirect" >> /dev/kmsg
+	helper_mode="| ZN-Hosts-Redirect"
+	echo "Bindhosts: Service Script - Mode ZN Hosts Redirect" >> /dev/kmsg
 }
 
 ksu_susfs_open_redirect() {
 	# Newer susfs v2.1.0 uses uid_scheme as a third argument
 	# 2 = Effective for non-su processes
 	${SUSFS_BIN} add_open_redirect /system/etc/hosts "$MODDIR/system/etc/hosts" 2 || ${SUSFS_BIN} add_open_redirect /system/etc/hosts "$MODDIR/system/etc/hosts"
-	echo "bindhosts: service.sh - mode ksu_susfs_open_redirect" >> /dev/kmsg
+	echo "Bindhosts: Service Script - Mode KSU SuSFS Open Redirect" >> /dev/kmsg
 }
 
 ksu_source_mod() { 
 	mount_bind
-	echo "bindhosts: service.sh - mode ksu_source_mod" >> /dev/kmsg
+	echo "Bindhosts: Service Script - Mode KSU Source Mod" >> /dev/kmsg
 }
 
 generic_overlay() {
 	overlay_routine
-	echo "bindhosts: service.sh - mode generic_overlay" >> /dev/kmsg
+	echo "Bindhosts: Service Script - Mode Generic Overlay" >> /dev/kmsg
 }
 
 ksu_susfs_overlay() {
@@ -84,7 +84,7 @@ ksu_susfs_overlay() {
 	${SUSFS_BIN} add_sus_mount /system/etc
 	${SUSFS_BIN} add_try_umount /system/etc 1
 	${SUSFS_BIN} add_try_umount /system/etc > /dev/null 2>&1 # ultra-legacy susfs
-	echo "bindhosts: service.sh - mode ksu_susfs_overlay" >> /dev/kmsg
+	echo "Bindhosts: Service Script - Mode KSU SuSFS Overlay" >> /dev/kmsg
 }
 
 ksu_susfs_bind_kstat() { 
@@ -93,19 +93,19 @@ ksu_susfs_bind_kstat() {
 	${SUSFS_BIN} update_sus_kstat '/system/etc/hosts'
 	${SUSFS_BIN} add_try_umount '/system/etc/hosts' 1
 	${SUSFS_BIN} add_try_umount '/system/etc/hosts' > /dev/null 2>&1 #legacy susfs
-	echo "bindhosts: service.sh - mode ksu_susfs_bind_kstat" >> /dev/kmsg
+	echo "Bindhosts: Service Script - Mode KSU SuSFS Bind Kstat" >> /dev/kmsg
 }
 
 ksud_kernel_umount() { 
 	mount_bind
 	/data/adb/ksud kernel umount add '/system/etc/hosts' --flags 2 > /dev/null 2>&1
-	echo "bindhosts: service.sh - mode ksud_kernel_umount" >> /dev/kmsg
+	echo "Bindhosts: Service Script - Mode KSUD Kernel Umount" >> /dev/kmsg
 }
 
 ##
 # check opmodes and then do something
 case $operating_mode in
-	0) normal_mount ;;
+	0)  ;;
 	1) ksu_susfs_bind ;;
 	2) bindhosts ;;
 	3) kernel_hostsredirect ;;
@@ -131,7 +131,7 @@ fi
 # just check if crontabs exists
 # if it does then we enable crond
 [ -d $PERSISTENT_DIR/crontabs ] && {
-	echo "bindhosts: service.sh - enabling crond" >> /dev/kmsg
+	echo "Bindhosts: Service Script - Enabling Crond" >> /dev/kmsg
 	busybox crond -bc $PERSISTENT_DIR/crontabs -L /dev/null
 	}
 
@@ -161,20 +161,20 @@ if [ -w $target_hostsfile ] ; then
 	echo "bindhosts: service.sh - active" >> /dev/kmsg
 	# writable hosts file aye? 
 	# tell the user we are ready
-	string="description=status: ready 🚀"
+	string="description=Status: Ready"
 	# readout if bindhosts.sh did something
-	[ "$bindhosts_enabled" = true ] && string="description=status: active ✅ | blocked: $blocked_count 🚫 | custom: $custom_count 🤖 $helper_mode"
+	[ "$bindhosts_enabled" = true ] && string="description=status: Active | Blocked: $blocked_count | Custom: $custom_count $"
 	# read out if Adaway did something 
-	[ "$adaway_enabled" = true ] && string="description=status: active ✅ | 🛑 AdAway 🕊️"
+	[ "$adaway_enabled" = true ] && string="description=Status: Active | AdAway"
 else
-	string="description=status: failed 😭 needs correction 💢"
+	string="description=Status: Needs Correction"
 	touch $MODDIR/disable
 fi
 
 # do not bother updating if generated string is the same
 desc_current=$(grep "^description=" "$MODDIR/module.prop")
 if [ "$desc_current" = "$string" ]; then
-	# echo "bindhosts: same shit. skip update" >> /dev/kmsg
+	# echo "Bindhosts: Same Failure, Skip Update" >> /dev/kmsg
 	return
 fi
 
