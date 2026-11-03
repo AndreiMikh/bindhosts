@@ -16,15 +16,15 @@ rwdir=$MODDIR
 [ -w /dev ] && rwdir=/dev
 
 if [ -z "$WEBUI_QUIET" ]; then
-	echo "[+] bindhosts v$versionCode"
-	echo "[%] bindhosts.sh"
-	echo "[%] standalone hosts-based-adblocking implementation"
+	echo "[+] Bindhosts v$versionCode"
+	echo "[%] Bindhosts Script"
+	echo "[%] Standalone Hosts-Based-Ad-Blocking Implementation"
 	echo "[%] mode: $operating_mode | rwdir: $rwdir "
 fi
 
 [ -f $MODDIR/disable ] && {
-	echo "[*] not running since module has been disabled"
-	string="description=status: disabled ❌ | $(date)"
+	echo "[*] Not Running Since Module has been Disabled"
+	string="description=Status: Disabled | $(date)"
         sed -i "s/^description=.*/$string/g" $MODDIR/module.prop
 	return
 }
@@ -39,7 +39,7 @@ for i in $files ; do
 done
 
 adaway_warn() {
-	pm path org.adaway > /dev/null 2>&1 && echo "[-] 🚨 Current operation mode may not work with AdAway 📛"
+	pm path org.adaway > /dev/null 2>&1 && echo "[-] Current Operation Mode May Not Work with AdAway"
 }
 
 # impl def for changing variables
@@ -66,8 +66,8 @@ esac
 # check hosts file if writable, if not, warn and exit
 if [ ! -w $target_hostsfile ] ; then
 	# no fucking way
-	echo "[x] unwritable hosts file 😭 needs correction 💢"
-	string="description=status: unwritable hosts file 😭 needs correction 💢"
+	echo "[x] Unwritable Hosts File, Needs Correction"
+	string="description=status: Unwritable Hosts File"
         sed -i "s/^description=.*/$string/g" $MODDIR/module.prop
 	return
 fi
@@ -219,9 +219,9 @@ _is_valid_cron_arg() { # return value: 0 = true, 1 = false
 			fi
 
 			if [ "$is_arg_valid" = true ]; then
-				echo "[>] field #$x value [ $substring ] passed"
+				echo "[>] Field #$x Value [ $substring ] Passed"
 			else
-				echo "[!] field #$x value [ $substring ] failed"
+				echo "[!] Field #$x Value [ $substring ] Failed"
 				return 1
 			fi
 		done
@@ -232,7 +232,7 @@ _is_valid_cron_arg() { # return value: 0 = true, 1 = false
 
 custom_cron() {
 	shift
-	echo "[+] validating custom cron expression"
+	echo "[+] Validating Custom Cron Expression"
 	custom_cron_error=false
 	# Has only 1 arg and it starts with @
 	if [ "$(echo "$1" | wc -w)" -eq 1 ] && (echo "$1" | grep -q "^@"); then
@@ -243,13 +243,13 @@ custom_cron() {
 		x=1
 		while [ $x -lt 6 ] ; do
 			custom_cron_arg=$(echo "$1" | cut -d ' ' -f "$x")
-			echo "[>] checking field #$x: [ $custom_cron_arg ]"
+			echo "[>] Checking Field #$x: [ $custom_cron_arg ]"
 			is_arg_valid=false
 			_is_valid_cron_arg "$x" "$custom_cron_arg" && is_arg_valid=true
 			if [ "$is_arg_valid" = true ]; then
-				echo "[+] field #$x passed"
+				echo "[+] Field #$x Passed"
 			else
-				echo "[!] field #$x failed"
+				echo "[!] Field #$x Failed"
 				break
 			fi
 			x=$((x+1))
@@ -261,9 +261,9 @@ custom_cron() {
 	# this atleast will catch globbed
 	if [ -z "$1" ] || [ ! -z "$2" ] || [ "$custom_cron_error" = true ]; then
 		# shoutout to native test and holmes
-		echo "[!] futile cronjob" 
-		echo "[!] syntax: --custom-cron \"0 2 * * *\" " 
-		echo "[!] syntax: --custom-cron \"@hourly\" " 
+		echo "[!] Futile Cronjob" 
+		echo "[!] Syntax: --Custom-Cron \"0 2 * * *\" " 
+		echo "[!] Syntax: --Custom-Cron \"@hourly\" " 
 		exit 1
 	fi
 	# run crond
@@ -272,7 +272,7 @@ custom_cron() {
 	echo "$1 sh $MODDIR/bindhosts.sh --force-update > $PERSISTENT_DIR/bindhosts_cron.log 2>&1 &" | busybox crontab -c $PERSISTENT_DIR/crontabs -
 	echo "[>] $(head -n1 $PERSISTENT_DIR/crontabs/root) " 
 	echo "[!] make sure entry is correct!"
-	echo "[+] crontab entry added!"
+	echo "[+] Crontab Entry Added!"
 }
 
 enable_cron() {
@@ -281,7 +281,7 @@ enable_cron() {
 	# add entry
 	echo "0 10 * * * sh $MODDIR/bindhosts.sh --force-update > $PERSISTENT_DIR/bindhosts_cron.log 2>&1 &" | busybox crontab -c $PERSISTENT_DIR/crontabs -
 	echo "[>] $(head -n1 $PERSISTENT_DIR/crontabs/root) " 
-	echo "[+] crontab entry added!"
+	echo "[+] Crontab Entry Added!"
 }
 
 disable_cron() {
@@ -289,26 +289,26 @@ disable_cron() {
 	for i in $(busybox pidof busybox); do 
 		# super leet gamma knife
 		grep -q "bindhosts" "/proc/$i/cmdline" > /dev/null 2>&1 && {
-		echo "[x] killing pid $i"
+		echo "[x] Killing PID $i"
 		busybox kill -9 "$i"
 		}
 	done
 	# clean entry
 	if grep -q "bindhosts.sh" $PERSISTENT_DIR/crontabs/root > /dev/null 2>&1; then
 		rm -rf $PERSISTENT_DIR/crontabs
-		echo "[x] crontab entry removed!"
+		echo "[x] Crontab Entry Removed!"
 	else
-		echo "[x] no crontab entry found!"
+		echo "[x] No Crontab Entry Found!"
 	fi
 }
 
 toggle_updatejson() {
 	if grep -q "^updateJson" $MODDIR/module.prop ; then
 		sed -i 's/updateJson/xpdateJson/g' $MODDIR/module.prop 
-		echo "[x] module updates disabled!" 
+		echo "[x] Module Updates Disabled!" 
 	else
 		sed -i 's/xpdateJson/updateJson/g' $MODDIR/module.prop 
-		echo "[+] module updates enabled!" 
+		echo "[+] Module Updates Enabled!" 
 	fi
 }
 
@@ -328,11 +328,11 @@ fi
 adblock() {
 	illusion
 	# source processing start!
-	echo "[+] processing sources"
+	echo "[+] Processing Sources"
 	sources=$(sed 's/#.*//' $PERSISTENT_DIR/sources.txt | grep -v "^disabled" | grep http)
 	if [ -z "$sources" ]; then
-		echo "[x] no sources found 😭"
-		echo "[x] sources.txt needs correction 💢"
+		echo "[x] No Sources Found"
+		echo "[x] Sources.txt Needs Correction"
 		return
 	fi
 
@@ -346,22 +346,22 @@ adblock() {
 			successful_downloads=$((successful_downloads + 1))
 			echo "" >> "$rwdir/temphosts"
 		else
-			echo "[x] failed downloading $url"
+			echo "[x] Failed Downloading $url"
 		fi
 	done
 
 	# if all downloads failed we are probably offline, abort the update.
 	if [ "$successful_downloads" -eq 0 ] && [ "$total_downloads" -gt 0 ]; then
-		echo "[!] all downloads failed, aborting update."
-		echo "[!] keeping existing hosts file."
+		echo "[!] All Downloads Failed, Aborting Update"
+		echo "[!] Keeping Existing Hosts File"
 		rm -f "$rwdir/temphosts"
 		return
 	fi
 
 	# if temphosts is empty (can happen if sources were valid but returned no content)
 	[ ! -s "$rwdir/temphosts" ] && {
-		echo "[!] downloaded hosts content is empty"
-		echo "[!] using old hosts file!"
+		echo "[!] Downloaded Hosts Content is Empty"
+		echo "[!] Using Old Hosts File!"
 		# strip first two lines since thats just localhost
 		tail -n +3 $target_hostsfile > "$rwdir/temphosts"
 		}
@@ -372,13 +372,13 @@ adblock() {
 	# blacklist.txt
 	for i in $(sed 's/#.*//' $PERSISTENT_DIR/blacklist.txt ); do echo "0.0.0.0 $i" >> "$rwdir/temphosts"; done
 	# whitelist.txt
-	echo "[+] processing whitelist"
+	echo "[+] Processing Whitelist"
 	# make sure tempwhitelist isnt empty
 	# or it will grep out nothingness from everything
 	# which actually greps out everything.
 	echo "256.256.256.256 bindhosts" > "$rwdir/tempwhitelist"
 	for url in $(sed 's/#.*//' $PERSISTENT_DIR/sources_whitelist.txt | grep http) ; do
-		echo "[>] fetching $url"
+		echo "[>] Fetching $url"
 		download "$url" >> "$rwdir/remote_whitelist" || echo "[x] failed downloading $url"
 	done
 	# if there is a remote whitelist, we clean it up
@@ -393,18 +393,18 @@ adblock() {
 	# no need to -x on grep, allow wildmatches! bindhosts/issue #112
 	sort -u "$rwdir/temphosts" | grep -Fvf "$rwdir/tempwhitelist" >> $target_hostsfile
 	# mark it, will be read by service.sh to deduce
-	echo "# bindhosts v$versionCode" >> $target_hostsfile
+	echo "Bindhosts v$versionCode" >> $target_hostsfile
 }
 
 reset() {
-	echo "[+] reset toggled!" 
+	echo "[+] Reset Toggled!" 
 	# localhost
 	printf "127.0.0.1 localhost\n::1 localhost\n" > $target_hostsfile
 	# always restore user's custom rules
 	sed 's/#.*//; /^$/d; s/^disabled|//g' $PERSISTENT_DIR/custom*.txt >> $target_hostsfile
-        string="description=status: reset 🤐 | $(date)"
+        string="description=status: Reset | $(date)"
         sed -i "s/^description=.*/$string/g" $MODDIR/module.prop
-        echo "[+] hosts file reset!"
+        echo "[+] Hosts File Reset!"
         # reset state
         rm $PERSISTENT_DIR/bindhosts_state > /dev/null 2>&1
 }
@@ -416,8 +416,8 @@ run() {
 	custom=$( grep -vEc "0.0.0.0| localhost|#" $target_hostsfile)
 	blocked=$(grep -c "0.0.0.0" $target_hostsfile )
 	# now use them
-	echo "[+] blocked: $blocked | custom: $custom "
-	string="description=status: active ✅ | blocked: $blocked 🚫 | custom: $custom 🤖 $helper_mode"
+	echo "[+] Blocked: $blocked | Custom: $custom "
+	string="description=status: Active | Blocked: $blocked | Custom: $custom $helper_mode"
 	sed -i "s/^description=.*/$string/g" $MODDIR/module.prop
 	# ready for reset again
 	(cat $PERSISTENT_DIR/*.txt; date +%F) | busybox crc32 > $PERSISTENT_DIR/bindhosts_state
@@ -426,13 +426,13 @@ run() {
 }
 
 # adaway is installed and hosts are modified by adaway, dont overthrow
-pm path org.adaway > /dev/null 2>&1 && grep -q "generated by AdAway" /system/etc/hosts && {
+pm path org.adaway > /dev/null 2>&1 && grep -q "Generated by AdAway" /system/etc/hosts && {
 	# adaway coex
-	string="description=status: active ✅ | 🛑 AdAway 🕊️"
+	string="description=status: Active | AdAway"
 	sed -i "s/^description=.*/$string/g" $MODDIR/module.prop
-	echo "[*] 🚨 hosts modified by Adaway 🛑"
-	echo "[*] assuming coexistence operation"
-	echo "[*] please reset hosts in Adaway before continuing"
+	echo "[*] 🚨 Hosts Modified by AdAway"
+	echo "[*] Assuming Co-Existence Operation"
+	echo "[*] Please Reset Hosts in AdAway Before Continuing"
 	case "$1" in
 		--query|--toggle-updatejson|--setup-link) true ;;
 		*) return ;;
@@ -457,18 +457,18 @@ quick_reset_restore () {
 		custom=$( grep -vEc "0.0.0.0| localhost|#" $target_hostsfile)
 		blocked=$(grep -c "0.0.0.0" $target_hostsfile )
 		# now use them
-		echo "[+] blocked: $blocked | custom: $custom "
-		string="description=status: active ✅ | blocked: $blocked 🚫 | custom: $custom 🤖 $helper_mode"
+		echo "[+] Blocked: $blocked | Custom: $custom "
+		string="description=status: Active | Blocked: $blocked | Custom: $custom $helper_mode"
 	else
-		echo "[+] backing up hosts file!"
+		echo "[+] Backing up Hosts File!"
 		cat $target_hostsfile > $PERSISTENT_DIR/bindhosts_backup
-		echo "[+] quick reset toggled!" 
+		echo "[+] Quick Reset Toggled!" 
 		# localhost
 		printf "127.0.0.1 localhost\n::1 localhost\n" > $target_hostsfile
 		# always restore user's custom rules
 		sed 's/#.*//; /^$/d; s/^disabled|//g' $PERSISTENT_DIR/custom*.txt >> $target_hostsfile
 		string="description=status: reset 🤐 | $(date)"
-		echo "[+] hosts file reset!"
+		echo "[+] Hosts File Reset!"
 	fi
 	sed -i "s/^description=.*/$string/g" $MODDIR/module.prop
 }
@@ -483,7 +483,7 @@ action () {
 		bindhosts_old_pid=$(cat $rwdir/bindhosts_lockfile)
 		# now check and fucking kill old instance
 		if [ -d "/proc/$bindhosts_old_pid" ] && grep -q "bindhosts" "/proc/$bindhosts_old_pid/cmdline" >/dev/null 2>&1; then
-			echo "[*] bindhosts with pid: $bindhosts_old_pid is still running!"
+			echo "[*] Bindhosts with PID: $bindhosts_old_pid is Still Running!"
 			busybox kill -9 $bindhosts_old_pid
 			echo "[*] killing $bindhosts_old_pid"
 			rm "$rwdir/bindhosts_lockfile" >/dev/null 2>&1
@@ -508,9 +508,9 @@ action () {
 				quick_reset_restore
 			fi
 		else
-			echo "[+] rule change detected!"
-			echo "[*] new: $newhash"
-			echo "[*] old: $oldhash"
+			echo "[+] Rule Change Detected!"
+			echo "[*] New: $newhash"
+			echo "[*] Old: $oldhash"
 			run
 		fi
 	else
@@ -528,14 +528,14 @@ tcpdump () {
 	if command -v tcpdump > /dev/null 2>&1; then
 		# reset hosts
 		[ ! -f $PERSISTENT_DIR/bindhosts_backup ] && quick_reset_restore || reset
-		echo "[+] restore hosts as needed"
-		echo "[+] make sure private dns is disabled!"
-		echo "[+] spawning tcpdump"
-		echo "[!] press ctrl+c to exit"
+		echo "[+] Restore Hosts as Needed"
+		echo "[+] Ensure Private DNS is Disabled!"
+		echo "[+] Spawning TCPDUMP"
+		echo "[!] Press CTRL+C to Exit"
 		sh -c "tcpdump -ltni any dst port 53"
 	else
-		echo "[!] tcpdump not found"
-		echo "[x] bailing out"
+		echo "[!] TCPDUMP Not Found"
+		echo "[x] Bailing Out"
 		exit 1
 	fi
 }
@@ -548,14 +548,13 @@ stop_tcpdump() {
 }
 
 hosts_lastmod () {
-	echo "[+] Last update at: $(date -r $target_hostsfile)"
+	echo "[+] Last Update at: $(date -r $target_hostsfile)"
 }
 
 hosts_query () {
 	shift
 	if [ -z "$1" ]; then 
-		echo "[!] empty query"
-		echo "[!] example usage: bindhosts --query doubleclick.net"
+		echo "[!] Empty Query"
 		return
 	fi
 	printf "Hosts \tDomain\n"
@@ -584,7 +583,7 @@ setup_link() {
 manager_install_zip() {
 	# sanity check	
 	if [ -z "$1" ] || [ ! -f "$1" ] || [ ! -f "$PERSISTENT_DIR/root_manager.sh" ]; then 
-		echo "[!] no manager logged, nothing specified or file not found"
+		echo "[!] No Manager Logged, Nothing Specified or File Not Found"
 		return
 	fi
 	# webui flag
@@ -593,19 +592,19 @@ manager_install_zip() {
 	. "$PERSISTENT_DIR/root_manager.sh"
 	case $manager in
 		APatch) 
-			echo "[+] installing via apd" 
+			echo "[+] Installing via APD" 
 			apd module install "$1" 
 			;;
 		KernelSU) 
-			echo "[+] installing via ksud" 
+			echo "[+] Installing via KSUD" 
 			ksud module install "$1" 
 			;;
 		Magisk) 
-			echo "[+] installing via magisk" 
+			echo "[+] Installing via Magisk" 
 			magisk --install-module "$1" 
 			;;
 		*) # catch invalid
-			echo "[!] root manager unknown??"
+			echo "[!] Root Manager Unknown??"
 			exit 1
 			;;
 	esac
@@ -628,7 +627,7 @@ update_locales() {
 install_latest_artifact() {
 	# likely won't happen but lets be defensive
 	if [ ! -f "$PERSISTENT_DIR/root_manager.sh" ]; then
-		echo "[!] root manager not detected"
+		echo "[!] Root Manager Not Detected"
 		exit 1
 	fi
 
@@ -647,7 +646,7 @@ install_latest_artifact() {
 			exit 1
 		fi
 	else
-		echo "[!] failure grabbing latest artifact" 
+		echo "[!] Failure Grabbing Latest Artifact" 
 		exit 1
 	fi
 
@@ -657,7 +656,7 @@ install_latest_artifact() {
 		manager_install_zip "$latest_zip_local"
 		update_locales || true
 	else
-		echo "[x] artifact download fail"
+		echo "[x] Artifact Download Fail"
 		exit 1
 	fi
 	[ -f "$latest_zip_local" ] && rm "$latest_zip_local"
