@@ -16,7 +16,7 @@ bindhosts_sh() {
 	# call bindhosts.sh
 	sh $MODDIR/bindhosts.sh --action
 	# print exec time
-	echo "[+] execution time: $(( $(date +%s) - start_time ))s"
+	echo "[+] Execution Time: $(( $(date +%s) - start_time ))s"
 	# 2s sleep on APatch on KernelSU
 	if [ -z "$MMRL" ] && [ -z "$KSU_NEXT" ] && { [ "$KSU" = "true" ] || [ "$APATCH" = "true" ]; }; then
 		sleep 2
@@ -46,7 +46,7 @@ fi
 if [ -z "$MMRL" ] && [ ! -z "$MAGISKTMP" ] && [ $magisk_webui_redirect = 1 ] ; then
 	# courtesy of kow
 	pm path io.github.a13e300.ksuwebui > /dev/null 2>&1 && {
-		echo "- Launching WebUI in KSUWebUIStandalone..."
+		echo "- Launching WebUI in KSU WebUI Standalone..."
 		am start -n "io.github.a13e300.ksuwebui/.WebUIActivity" -e id "bindhosts"
 		exit 0
 	}
