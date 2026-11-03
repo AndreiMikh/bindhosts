@@ -42,7 +42,7 @@ fi
 # ksud kernel umount
 # https://github.com/tiann/KernelSU/commit/4a18921bc00eb83ba3e60bec5672dfbc4d2bd9a2
 if [ "$KSU" = true ] && /data/adb/ksud kernel 2>&1 | grep -q "umount" >/dev/null 2>&1; then
-	echo "bindhosts: post-fs-data.sh - ksud with kernel umount found!" >> /dev/kmsg
+	echo "Bindhosts: Post-FS-Data Script - KSUD with Kernel Umount Found!" >> /dev/kmsg
 	mode=10
 fi
 
@@ -54,7 +54,7 @@ denylist_handlers="rezygisk zygisk-assistant zygisk_nohello"
 for module_name in $denylist_handlers; do
 	if [ -d "/data/adb/modules/$module_name" ] && [ ! -f "/data/adb/modules/$module_name/disable" ] && 
 		[ ! -f "/data/adb/modules/$module_name/remove" ]; then
-		echo "bindhosts: post-fs-data.sh - $module_name found!" >> /dev/kmsg
+		echo "Bindhosts: Post-FS-Data Script - $module_name Found!" >> /dev/kmsg
 		mode=2
 	fi
 done
@@ -66,13 +66,13 @@ zygisksu_dir="/data/adb/modules/zygisksu"
 if [ -d "$zygisksu_dir" ] && [ ! -f "$zygisksu_dir/remove" ] && [ ! -f "$zygisksu_dir/disable" ]; then
 	enforce_denylist_mode=$(cat /data/adb/zygisksu/denylist_enforce)
 	if [ "$enforce_denylist_mode" -gt 0 ]; then 
-		echo "bindhosts: post-fs-data.sh - ZygiskNext 1.3.0+ found with enforce_denylist $enforce_denylist_mode" >> /dev/kmsg
+		echo "Bindhosts: Post-FS-Data Script - ZygiskNext 1.3.0+ Found with Enforce Denylist $enforce_denylist_mode" >> /dev/kmsg
 		mode=2
 	fi
 # we move NeoZygisk handling here
 # nz uses the same module id but different module name
 	if grep -q "NeoZygisk" "$zygisksu_dir/module.prop"; then
-		echo "bindhosts: post-fs-data.sh - NeoZygisk found!" >> /dev/kmsg
+		echo "Bindhosts: Post-FS-Data Script - NeoZygisk Found!" >> /dev/kmsg
 		mode=2
 	fi
 fi
@@ -81,7 +81,7 @@ fi
 # handle probing for susfs 1.5.3+
 if [ "$KSU" = true ] && [ -f ${SUSFS_BIN} ] &&
 	${SUSFS_BIN} show enabled_features | grep -q "CONFIG_KSU_SUSFS_TRY_UMOUNT" >/dev/null 2>&1; then
-	echo "bindhosts: post-fs-data.sh - susfs with try_umount found!" >> /dev/kmsg
+	echo "Bindhosts: Post-FS-Data Script - SuSFS with Try Umount Found!" >> /dev/kmsg
 	mode=1
 fi
 
@@ -91,7 +91,7 @@ nomount_dir="/data/adb/modules/nomount"
 if { [ "$APATCH" = "true" ] || [ "$KSU" = "true" ]; } && [ -L "/data/adb/metamodule" ] &&
 	[ -d "$nomount_dir" ] && [ ! -f "$nomount_dir/disable" ] && [ ! -f "$nomount_dir/remove" ]; then
 	mode=0
-	echo "bindhosts: post-fs-data.sh - nomount metamodule found!" >> /dev/kmsg
+	echo "Bindhosts: Post-FS-Data Script - NoMount Metamodule Found!" >> /dev/kmsg
 fi
 
 # hosts_file_redirect operating_mode
@@ -115,7 +115,7 @@ fi
 
 # override operating mode here
 if [ -f /data/adb/bindhosts/mode_override.sh ]; then
-	echo "bindhosts: post-fs-data.sh - mode_override found!" >> /dev/kmsg
+	echo "Bindhosts: Post-FS-Data Script - Mode Override Found!" >> /dev/kmsg
 	. /data/adb/bindhosts/mode_override.sh
 fi
 
@@ -151,6 +151,6 @@ if [ ! "$current_manager" = "$manager" ]; then
 fi
 
 # debugging
-echo "bindhosts: post-fs-data.sh - probing done" >> /dev/kmsg
+echo "Bindhosts: Post-FS-Data Script - Probing Done" >> /dev/kmsg
 
 # EOF
