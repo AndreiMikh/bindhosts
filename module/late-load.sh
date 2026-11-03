@@ -6,6 +6,6 @@ PERSISTENT_DIR="/data/adb/bindhosts"
 
 sh "$MODDIR/post-fs-data.sh" > /dev/null 2>&1
 
-echo "bindhosts: late-load.sh done" >> /dev/kmsg
+echo "Bindhosts: Late-Load Script Done" >> /dev/kmsg
 
 # EOF
